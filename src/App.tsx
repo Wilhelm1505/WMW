@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-// Typen definieren
+// Definiere die Typen
 type Criterion = {
   name: string;
   rating: number;
@@ -8,7 +8,7 @@ type Criterion = {
 
 type Perspective = {
   title: string;
-  criteria: Criterion[];  // Korrekt typisiert als Array von `Criterion`
+  criteria: Criterion[];
 };
 
 export default function App() {
@@ -16,8 +16,8 @@ export default function App() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [editMode, setEditMode] = useState(true);
   const [mainTopic, setMainTopic] = useState("Strategie des Unternehmens");
-  
-  // Perspektiven mit Kriterien initialisieren
+
+  // Perspektiven initialisieren mit einer sauberen Typisierung
   const [perspectives, setPerspectives] = useState<Perspective[]>([
     { title: "Perspektive 1", criteria: [{ name: "", rating: 3 }] },
     { title: "Perspektive 2", criteria: [{ name: "", rating: 3 }] },
@@ -35,11 +35,11 @@ export default function App() {
   // Kriterium hinzufügen
   const addCriterion = (index: number) => {
     const updated = [...perspectives];
-    updated[index].criteria.push({ name: "", rating: 3 });  // Hier typisieren wir `name` als `string` und `rating` als `number`
+    updated[index].criteria.push({ name: "", rating: 3 });
     setPerspectives(updated);
   };
 
-  // Kriterium aktualisieren
+  // Kriterium aktualisieren (Name oder Rating)
   const updateCriterion = (
     pIndex: number,
     cIndex: number,
