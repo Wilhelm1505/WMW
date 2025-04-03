@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+// Typen definieren
 type Criterion = {
   name: string;
   rating: number;
@@ -22,18 +23,21 @@ export default function App() {
     { title: "Perspektive 4", criteria: [{ name: "", rating: 3 }] },
   ]);
 
+  // Titel für Perspektiven ändern
   const updateTitle = (index: number, value: string) => {
     const updated = [...perspectives];
     updated[index].title = value;
     setPerspectives(updated);
   };
 
+  // Kriterium hinzufügen
   const addCriterion = (index: number) => {
     const updated = [...perspectives];
     updated[index].criteria.push({ name: "", rating: 3 });
     setPerspectives(updated);
   };
 
+  // Kriterium aktualisieren
   const updateCriterion = (
     pIndex: number,
     cIndex: number,
@@ -46,6 +50,7 @@ export default function App() {
     setPerspectives(updated);
   };
 
+  // Durchschnittswerte berechnen
   const calculateAverages = () => {
     return perspectives.map((p) => {
       const ratings = p.criteria.map((c) => c.rating);
