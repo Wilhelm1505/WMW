@@ -16,10 +16,10 @@ export default function App() {
   const [editMode, setEditMode] = useState(true);
   const [mainTopic, setMainTopic] = useState("Strategie des Unternehmens");
   const [perspectives, setPerspectives] = useState<Perspective[]>([
-    { title: "Perspektive 1", criteria: [] },
-    { title: "Perspektive 2", criteria: [] },
-    { title: "Perspektive 3", criteria: [] },
-    { title: "Perspektive 4", criteria: [] },
+    { title: "Perspektive 1", criteria: [{ name: "", rating: 3 }] },
+    { title: "Perspektive 2", criteria: [{ name: "", rating: 3 }] },
+    { title: "Perspektive 3", criteria: [{ name: "", rating: 3 }] },
+    { title: "Perspektive 4", criteria: [{ name: "", rating: 3 }] },
   ]);
 
   const updateTitle = (index: number, value: string) => {
