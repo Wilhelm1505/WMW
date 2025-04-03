@@ -19,7 +19,7 @@ export default function App() {
   const [view, setView] = useState<"home" | "detail" | "summary">("home");
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [editMode, setEditMode] = useState(true);
-  const [mainTopic, setMainTopic] = useState("Strategie des Unternehmens");
+  const [mainTopic, setMainTopic] = useState("Platzhalter");
 
   // Perspektiven-Array mit Platzhaltern
   const [perspectives, setPerspectives] = useState<Perspective[]>([
@@ -88,6 +88,7 @@ export default function App() {
   return (
     <div className="p-6 max-w-5xl mx-auto text-center space-y-6 relative">
       <div className="flex justify-between items-center">
+        {/* Logo oben rechts */}
         <img src="/logo.png" alt="App Logo" className="h-16" />
         <button
           onClick={() => setEditMode(!editMode)}
@@ -124,6 +125,7 @@ export default function App() {
               editMode={editMode}
             />
 
+            {/* Platzhalter-Kachel */}
             <Kachel
               value={mainTopic}
               onClick={() => setView("summary")}
@@ -223,6 +225,7 @@ export default function App() {
   );
 }
 
+// Kachel-Komponente für die einzelnen Perspektiven
 type KachelProps = {
   value: string;
   onClick: () => void;
