@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-// Typen definieren
+// Definiere Typen für Kriterium und Perspektive
 type Criterion = {
   name: string;
   rating: number;
@@ -17,7 +17,7 @@ export default function App() {
   const [editMode, setEditMode] = useState(true);
   const [mainTopic, setMainTopic] = useState("Strategie des Unternehmens");
 
-  // Perspektiven mit Kriterien initialisieren
+  // Initialisierung der Perspektiven und Kriterien
   const [perspectives, setPerspectives] = useState<Perspective[]>([
     { title: "Perspektive 1", criteria: [{ name: "", rating: 3 }] },
     { title: "Perspektive 2", criteria: [{ name: "", rating: 3 }] },
@@ -25,7 +25,7 @@ export default function App() {
     { title: "Perspektive 4", criteria: [{ name: "", rating: 3 }] },
   ]);
 
-  // Funktion zum Ändern des Titels einer Perspektive
+  // Funktion zum Titel-Update einer Perspektive
   const updateTitle = (index: number, value: string) => {
     const updated = [...perspectives];
     updated[index].title = value;
@@ -39,7 +39,7 @@ export default function App() {
     setPerspectives(updated);
   };
 
-  // Funktion zum Aktualisieren von Kriterien
+  // Funktion zum Aktualisieren von Kriterium-Daten
   const updateCriterion = (
     pIndex: number,
     cIndex: number,
@@ -52,7 +52,7 @@ export default function App() {
     setPerspectives(updated);
   };
 
-  // Durchschnittswerte der Bewertungen berechnen
+  // Funktion zur Berechnung der Durchschnittswerte
   const calculateAverages = () => {
     return perspectives.map((p) => {
       const ratings = p.criteria.map((c) => c.rating);
