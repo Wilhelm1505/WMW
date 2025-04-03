@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-// Definiere die Typen
+// Definiere die Typen für das Kriterium und die Perspektive
 type Criterion = {
   name: string;
   rating: number;
@@ -17,7 +17,7 @@ export default function App() {
   const [editMode, setEditMode] = useState(true);
   const [mainTopic, setMainTopic] = useState("Strategie des Unternehmens");
 
-  // Perspektiven initialisieren mit einer sauberen Typisierung
+  // Initialisiere Perspektiven mit einer korrekt typisierten Struktur
   const [perspectives, setPerspectives] = useState<Perspective[]>([
     { title: "Perspektive 1", criteria: [{ name: "", rating: 3 }] },
     { title: "Perspektive 2", criteria: [{ name: "", rating: 3 }] },
