@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-// Typen definieren
 type Criterion = {
   name: string;
   rating: number;
@@ -16,6 +15,11 @@ export default function App() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [editMode, setEditMode] = useState(true);
   const [mainTopic, setMainTopic] = useState("Strategie des Unternehmens");
+  type Criterion = {
+    name: string;
+    rating: number;
+  };
+  
   const [perspectives, setPerspectives] = useState<Perspective[]>([
     { title: "Perspektive 1", criteria: [{ name: "", rating: 3 }] },
     { title: "Perspektive 2", criteria: [{ name: "", rating: 3 }] },
