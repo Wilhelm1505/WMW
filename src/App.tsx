@@ -1,15 +1,18 @@
 import { useState } from "react";
+import { Doughnut } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, CategoryScale, LinearScale } from "chart.js";
 
-// Definiere den Typ für ein Kriterium
+// Chart.js Registrierung
+ChartJS.register(ArcElement, Tooltip, Legend, Title, CategoryScale, LinearScale);
+
 type Criterion = {
   name: string;
-  rating: number; // rating sollte eine Zahl sein
+  rating: number; // rating ist immer eine Zahl von 0 bis 100
 };
 
-// Definiere den Typ für eine Perspektive
 type Perspective = {
   title: string;
-  criteria: Criterion[];
+  criteria: Criterion[]; // Kriterien sind ein Array von Criterion-Objekten
 };
 
 export default function App() {
@@ -18,47 +21,68 @@ export default function App() {
   const [editMode, setEditMode] = useState(true);
   const [mainTopic, setMainTopic] = useState("Strategie des Unternehmens");
 
-  // Perspektiven mit Kriterium und Typen initialisieren
+  // Perspektiven-Array mit Platzhaltern
   const [perspectives, setPerspectives] = useState<Perspective[]>([
-    { title: "Perspektive 1", criteria: [{ name: "Platzhalter", rating: 3 }] },
-    { title: "Perspektive 2", criteria: [{ name: "Platzhalter", rating: 3 }] },
-    { title: "Perspektive 3", criteria: [{ name: "Platzhalter", rating: 3 }] },
-    { title: "Perspektive 4", criteria: [{ name: "Platzhalter", rating: 3 }] },
+    { title: "Perspektive 1", criteria: [{ name: "Platzhalter", rating: 50 }] },
+    { title: "Perspektive 2", criteria: [{ name: "Platzhalter", rating: 60 }] },
+    { title: "Perspektive 3", criteria: [{ name: "Platzhalter", rating: 70 }] },
+    { title: "Perspektive 4", criteria: [{ name: "Platzhalter", rating: 80 }] },
   ]);
 
+  // Funktion zum Aktualisieren des Titels einer Perspektive
   const updateTitle = (index: number, value: string) => {
     const updated = [...perspectives];
     updated[index].title = value;
     setPerspectives(updated);
   };
 
+  // Funktion zum Hinzufügen eines Kriteriums zu einer Perspektive
   const addCriterion = (index: number) => {
     const updated = [...perspectives];
-    updated[index].criteria.push({ name: "Platzhalter", rating: 3 });
+    updated[index].criteria.push({ name: "Platzhalter", rating: 50 });
     setPerspectives(updated);
   };
 
+  // Funktion zum Aktualisieren der Kriterium-Daten
   const updateCriterion = (
-    pIndex: number,
-    cIndex: number,
-    field: "name" | "rating",
+    pIndex: number, 
+    cIndex: number, 
+    field: "name" | "rating", 
     value: string
   ) => {
-    const updated = [...perspectives];
-    updated[pIndex].criteria[cIndex][field] =
-      field === "rating" ? Number(value) : value; // Sicherstellen, dass rating eine Zahl ist
-    setPerspectives(updated);
+    const updated = [...perspectives]; // Kopiere das Perspektiven-Array
+    const criterion = updated[pIndex].criteria[cIndex];
+    if (field === "rating") {
+      criterion.rating = Number(value); // Wenn "rating", konvertiere in Zahl
+    } else {
+      criterion.name = value;
+    }
+    setPerspectives(updated); // Setze die aktualisierten Perspektiven
   };
 
+  // Berechnung der Durchschnittsbewertung für jede Perspektive
   const calculateAverages = () => {
     return perspectives.map((p) => {
-      const ratings = p.criteria.map((c) => c.rating);
+      const ratings = p.criteria.map((c) => c.rating); // Alle Bewertungen einer Perspektive
       const avg =
         ratings.length > 0
           ? (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(2)
-          : "-";
-      return { title: p.title, average: avg };
+          : "0"; // Durchschnitt berechnen
+      return { title: p.title, average: parseFloat(avg) };
     });
+  };
+
+  // Daten für das Kreisdiagramm (Doughnut Chart)
+  const chartData = {
+    labels: ["Durchschnittsbewertung"],
+    datasets: [
+      {
+        label: "Bewertung",
+        data: [calculateAverages().reduce((acc, p) => acc + p.average, 0) / perspectives.length],
+        backgroundColor: ["#4caf50"], // Farbe des Kreises
+        borderWidth: 1,
+      },
+    ],
   };
 
   return (
@@ -153,19 +177,16 @@ export default function App() {
                 ) : (
                   <span className="flex-1">{c.name}</span>
                 )}
-                <select
+                <input
                   className="border rounded px-2 py-1"
+                  type="number"
+                  min={0}
+                  max={100}
                   value={c.rating}
                   onChange={(e) =>
                     updateCriterion(activeIndex, cIndex, "rating", e.target.value)
                   }
-                >
-                  {[1, 2, 3, 4, 5].map((n) => (
-                    <option key={n} value={n}>
-                      {n}
-                    </option>
-                  ))}
-                </select>
+                />
               </li>
             ))}
           </ul>
@@ -188,14 +209,9 @@ export default function App() {
       {view === "summary" && (
         <div>
           <h2 className="text-2xl font-bold mb-6">{mainTopic}: Auswertung</h2>
-          <ul className="space-y-4 text-left max-w-md mx-auto">
-            {calculateAverages().map((p, idx) => (
-              <li key={idx} className="flex justify-between border-b pb-1">
-                <span>{p.title}</span>
-                <span>Ø Bewertung: {p.average}</span>
-              </li>
-            ))}
-          </ul>
+          <div className="max-w-xs mx-auto">
+            <Doughnut data={chartData} />
+          </div>
           <div className="mt-6">
             <button className="border px-3 py-1 rounded" onClick={() => setView("home")}>
               Zurück zur Übersicht
