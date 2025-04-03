@@ -31,43 +31,53 @@ export default function App() {
 
   // Funktion zum Aktualisieren des Titels einer Perspektive
   const updateTitle = (index: number, value: string) => {
+    if (index < 0 || index >= perspectives.length) {
+      console.error("Ungültiger Index:", index);
+      return;
+    }
     const updated = [...perspectives];
     updated[index].title = value;
     setPerspectives(updated);
   };
 
-  // Funktion zum Hinzufügen eines Kriteriums zu einer Perspektive
-  const addCriterion = (index: number) => {
-    const updated = [...perspectives];
-    updated[index].criteria.push({ name: "Platzhalter", rating: 50 });
-    setPerspectives(updated);
-  };
-
   // Funktion zum Aktualisieren der Kriterium-Daten
   const updateCriterion = (
-    pIndex: number, 
-    cIndex: number, 
-    field: "name" | "rating", 
+    pIndex: number,
+    cIndex: number,
+    field: "name" | "rating",
     value: string
   ) => {
-    const updated = [...perspectives]; // Kopiere das Perspektiven-Array
+    if (pIndex < 0 || pIndex >= perspectives.length) {
+      console.error("Ungültiger Perspektiven-Index:", pIndex);
+      return;
+    }
+    if (cIndex < 0 || cIndex >= perspectives[pIndex].criteria.length) {
+      console.error("Ungültiger Kriterien-Index:", cIndex);
+      return;
+    }
+    const updated = [...perspectives];
     const criterion = updated[pIndex].criteria[cIndex];
     if (field === "rating") {
       criterion.rating = Number(value); // Wenn "rating", konvertiere in Zahl
     } else {
       criterion.name = value;
     }
-    setPerspectives(updated); // Setze die aktualisierten Perspektiven
+    setPerspectives(updated);
+  };
+
+  // Beispiel: Verwenden der Funktion updateCriterion
+  const handleUpdateCriterion = () => {
+    updateCriterion(0, 0, "name", "Neuer Name");
   };
 
   // Berechnung der Durchschnittsbewertung für jede Perspektive
   const calculateAverages = () => {
     return perspectives.map((p) => {
-      const ratings = p.criteria.map((c) => c.rating); // Alle Bewertungen einer Perspektive
+      const ratings = p.criteria.map((c) => c.rating);
       const avg =
         ratings.length > 0
           ? (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(2)
-          : "0"; // Durchschnitt berechnen
+          : "0";
       return { title: p.title, average: parseFloat(avg) };
     });
   };
@@ -79,7 +89,7 @@ export default function App() {
       {
         label: "Bewertung",
         data: [calculateAverages().reduce((acc, p) => acc + p.average, 0) / perspectives.length],
-        backgroundColor: ["#4caf50"], // Farbe des Kreises
+        backgroundColor: ["#4caf50"],
         borderWidth: 1,
       },
     ],
@@ -87,8 +97,8 @@ export default function App() {
 
   return (
     <div className="p-6 max-w-5xl mx-auto text-center space-y-6 relative">
+      {/* Logos oben */}
       <div className="flex justify-between items-center">
-        {/* Logo oben rechts */}
         <img src="/logo.png" alt="App Logo" className="h-16" />
         <button
           onClick={() => setEditMode(!editMode)}
@@ -102,30 +112,41 @@ export default function App() {
       {view === "home" && (
         <>
           <h1 className="text-2xl font-bold mb-4">Balanced Scorecard App</h1>
-          <div className="grid grid-cols-3 grid-rows-3 gap-4 h-[500px]">
-            <div></div>
+          {/* Kacheln um die Hauptkachel gruppieren */}
+          <div className="grid grid-cols-3 grid-rows-3 gap-4 h-[500px] items-center justify-center">
             <Kachel
               value={perspectives[0].title}
               onClick={() => {
-                setActiveIndex(0);
-                setView("detail");
+                if (activeIndex !== null) {
+                  setActiveIndex(0);
+                  setView("detail");
+                }
               }}
               onChange={(e) => updateTitle(0, e.target.value)}
               editMode={editMode}
             />
-            <div></div>
-
+            <Kachel
+              value={perspectives[1].title}
+              onClick={() => {
+                if (activeIndex !== null) {
+                  setActiveIndex(1);
+                  setView("detail");
+                }
+              }}
+              onChange={(e) => updateTitle(1, e.target.value)}
+              editMode={editMode}
+            />
             <Kachel
               value={perspectives[2].title}
               onClick={() => {
-                setActiveIndex(2);
-                setView("detail");
+                if (activeIndex !== null) {
+                  setActiveIndex(2);
+                  setView("detail");
+                }
               }}
               onChange={(e) => updateTitle(2, e.target.value)}
               editMode={editMode}
             />
-
-            {/* Platzhalter-Kachel */}
             <Kachel
               value={mainTopic}
               onClick={() => setView("summary")}
@@ -133,79 +154,26 @@ export default function App() {
               editMode={editMode}
               center
             />
-
             <Kachel
               value={perspectives[3].title}
               onClick={() => {
-                setActiveIndex(3);
-                setView("detail");
+                if (activeIndex !== null) {
+                  setActiveIndex(3);
+                  setView("detail");
+                }
               }}
               onChange={(e) => updateTitle(3, e.target.value)}
               editMode={editMode}
             />
-
-            <div></div>
-            <Kachel
-              value={perspectives[1].title}
-              onClick={() => {
-                setActiveIndex(1);
-                setView("detail");
-              }}
-              onChange={(e) => updateTitle(1, e.target.value)}
-              editMode={editMode}
-            />
-            <div></div>
           </div>
+          {/* Button zum Testen von handleUpdateCriterion */}
+          <button
+            onClick={handleUpdateCriterion}
+            className="border px-3 py-1 rounded mt-4"
+          >
+            Kriterium aktualisieren
+          </button>
         </>
-      )}
-
-      {view === "detail" && activeIndex !== null && (
-        <div className="text-left">
-          <h2 className="text-2xl font-bold mb-4 text-center">
-            {perspectives[activeIndex].title}
-          </h2>
-          <ul className="space-y-2 mb-4">
-            {perspectives[activeIndex].criteria.map((c, cIndex) => (
-              <li key={cIndex} className="flex items-center gap-2">
-                {editMode ? (
-                  <input
-                    className="flex-1 border rounded px-2 py-1"
-                    placeholder="Kriterium"
-                    value={c.name}
-                    onChange={(e) =>
-                      updateCriterion(activeIndex, cIndex, "name", e.target.value)
-                    }
-                  />
-                ) : (
-                  <span className="flex-1">{c.name}</span>
-                )}
-                <input
-                  className="border rounded px-2 py-1"
-                  type="number"
-                  min={0}
-                  max={100}
-                  value={c.rating}
-                  onChange={(e) =>
-                    updateCriterion(activeIndex, cIndex, "rating", e.target.value)
-                  }
-                />
-              </li>
-            ))}
-          </ul>
-          <div className="flex justify-between">
-            <button className="border rounded px-3 py-1" onClick={() => setView("home")}>
-              Zurück
-            </button>
-            {editMode && (
-              <button
-                className="bg-blue-600 text-white rounded px-3 py-1"
-                onClick={() => addCriterion(activeIndex)}
-              >
-                + Kriterium
-              </button>
-            )}
-          </div>
-        </div>
       )}
 
       {view === "summary" && (
@@ -239,7 +207,7 @@ function Kachel({ value, onClick, onChange, editMode, center }: KachelProps) {
     <div
       onClick={onClick}
       className={`flex flex-col items-center justify-center cursor-pointer border-2 p-2 ${
-        center ? "font-semibold text-lg" : ""
+        center ? "font-semibold text-lg bg-gray-200" : ""
       }`}
     >
       {editMode ? (
