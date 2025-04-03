@@ -8,7 +8,7 @@ type Criterion = {
 
 type Perspective = {
   title: string;
-  criteria: Criterion[];
+  criteria: Criterion[];  // Korrekt typisiert als Array von `Criterion`
 };
 
 export default function App() {
@@ -35,7 +35,7 @@ export default function App() {
   // Kriterium hinzufügen
   const addCriterion = (index: number) => {
     const updated = [...perspectives];
-    updated[index].criteria.push({ name: "", rating: 3 });
+    updated[index].criteria.push({ name: "", rating: 3 });  // Hier typisieren wir `name` als `string` und `rating` als `number`
     setPerspectives(updated);
   };
 
