@@ -1,11 +1,12 @@
 import { useState } from "react";
 
-// Typen für Kriterien und Perspektiven definieren
+// Definiere den Typ für ein Kriterium
 type Criterion = {
   name: string;
-  rating: number;
+  rating: number; // rating sollte eine Zahl sein
 };
 
+// Definiere den Typ für eine Perspektive
 type Perspective = {
   title: string;
   criteria: Criterion[];
@@ -17,7 +18,7 @@ export default function App() {
   const [editMode, setEditMode] = useState(true);
   const [mainTopic, setMainTopic] = useState("Strategie des Unternehmens");
 
-  // Perspektiven mit Kriterien initialisieren
+  // Perspektiven mit Kriterium und Typen initialisieren
   const [perspectives, setPerspectives] = useState<Perspective[]>([
     { title: "Perspektive 1", criteria: [{ name: "Platzhalter", rating: 3 }] },
     { title: "Perspektive 2", criteria: [{ name: "Platzhalter", rating: 3 }] },
@@ -25,21 +26,18 @@ export default function App() {
     { title: "Perspektive 4", criteria: [{ name: "Platzhalter", rating: 3 }] },
   ]);
 
-  // Funktion zum Aktualisieren des Titels einer Perspektive
   const updateTitle = (index: number, value: string) => {
     const updated = [...perspectives];
     updated[index].title = value;
     setPerspectives(updated);
   };
 
-  // Funktion zum Hinzufügen eines neuen Kriteriums
   const addCriterion = (index: number) => {
     const updated = [...perspectives];
     updated[index].criteria.push({ name: "Platzhalter", rating: 3 });
     setPerspectives(updated);
   };
 
-  // Funktion zum Aktualisieren von Kriterium-Daten
   const updateCriterion = (
     pIndex: number,
     cIndex: number,
@@ -48,11 +46,10 @@ export default function App() {
   ) => {
     const updated = [...perspectives];
     updated[pIndex].criteria[cIndex][field] =
-      field === "rating" ? Number(value) : value;
+      field === "rating" ? Number(value) : value; // Sicherstellen, dass rating eine Zahl ist
     setPerspectives(updated);
   };
 
-  // Funktion zur Berechnung der Durchschnittswerte
   const calculateAverages = () => {
     return perspectives.map((p) => {
       const ratings = p.criteria.map((c) => c.rating);
