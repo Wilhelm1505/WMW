@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-
 type Criterion = {
   name: string;
   rating: number;
@@ -17,12 +16,11 @@ export default function App() {
   const [editMode, setEditMode] = useState(true);
   const [mainTopic, setMainTopic] = useState("Strategie des Unternehmens");
 
-  
   const [perspectives, setPerspectives] = useState<Perspective[]>([
-    { title: "Perspektive 1", criteria: [{ name: "", rating: 3 }] },
-    { title: "Perspektive 2", criteria: [{ name: "", rating: 3 }] },
-    { title: "Perspektive 3", criteria: [{ name: "", rating: 3 }] },
-    { title: "Perspektive 4", criteria: [{ name: "", rating: 3 }] },
+    { title: "Perspektive 1", criteria: [{ name: "Platzhalter", rating: 3 }] },
+    { title: "Perspektive 2", criteria: [{ name: "Platzhalter", rating: 3 }] },
+    { title: "Perspektive 3", criteria: [{ name: "Platzhalter", rating: 3 }] },
+    { title: "Perspektive 4", criteria: [{ name: "Platzhalter", rating: 3 }] },
   ]);
 
   const updateTitle = (index: number, value: string) => {
@@ -33,7 +31,7 @@ export default function App() {
 
   const addCriterion = (index: number) => {
     const updated = [...perspectives];
-    updated[index].criteria.push({ name: "", rating: 3 });
+    updated[index].criteria.push({ name: "Platzhalter", rating: 3 });
     setPerspectives(updated);
   };
 
